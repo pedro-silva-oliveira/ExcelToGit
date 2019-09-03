@@ -86,9 +86,10 @@ Sub Export()
         Comp.Export GitFolder & "\" & Comp.Name & ".cls"
         NewFiles.Add Comp.Name & ".cls"
         
-        If Comp.Name <> "ThisWorkbook" Then
+        If Comp.Name <> "ThisWorkbook" Or Comp.Name <> "EsteLivro" Then
           Dim Sh As Worksheet, ShName As String, IsVisible As XlSheetVisibility, ActiveSh As Worksheet
           Set Sh = SheetWithCodeName(WB, Comp.Name)
+          On Error GoTo 100
           IsVisible = Sh.Visible
           ShName = Sh.Name
           If IsAddin(Name) Then WB.IsAddin = False
@@ -122,6 +123,7 @@ Sub Export()
         Stop
         
     End Select
+100
   Next Comp
 
   WB.SaveAs FileName:=FullName, FileFormat:=Ext2Format(FullName), CreateBackup:=False
@@ -160,7 +162,7 @@ Function SheetWithCodeName(WB As Workbook, CodeName As String) As Worksheet
   For Each SheetWithCodeName In WB.Worksheets
     If SheetWithCodeName.CodeName = CodeName Then Exit Function
   Next SheetWithCodeName
-  Set SheetWithCodeName = Nothing
+  'Set SheetWithCodeName = Nothing
 End Function
 
 Function Ext2Format(FileName As String) As XlFileFormat
